@@ -1,16 +1,35 @@
-# Prerequisites:
-- Golang should be installed in the environment where the application will be built and run.
-- Basic understanding of Makefile and command-line interface.
+Makefile for Awesome API
+This Makefile is designed to automate the life-cycle of Awesome API. It provides several targets to build, run, stop, clean and test the application.
 
-## Project Lifecycle:
-- `build`: compile the source code of the application to a binary named `awesome-api` using the command `go build`.
-- `run`: run the application in the background by executing the binary `awesome-api` and write logs into a file named `awesome-api.log` using the command `./awesome-api >./awesome-api.log 2>&1 &`.
-- `stop`: stop the application using the command `kill XXXXX` where XXXXX is the Process ID of the application.
-- `clean`: stop the application and delete the binary `awesome-api` and the log file `awesome-api.log`.
-- `test`: test the application to ensure that it behaves as expected.
+Targets
+build: compiles the application.
+run: starts the application and writes output to awesome-api.log.
+stop: stops the application.
+clean: stops the application and removes the binary and log files.
+test: sends HTTP requests to the running application for testing purposes.
+help: prints a list of available targets with descriptions.
+Usage
+To build the application, run the following command:
 
-## Requirements:
-- A Makefile should be present and valid.
-- The binary `awesome-api` must NOT exist at the beginning, in the source code.
-- The goals `build`, `run`, `stop`, `clean`, and `test` should be implemented and mapped to the life-cycle stages of the same name.
-- The `help` goal must be implemented and print a list of all the goals with a sentence each
+
+make build
+To run the application, execute:
+
+
+make run
+To stop the application, execute:
+
+
+make stop
+To clean the binary and log files, run:
+
+
+make clean
+To test the application, run:
+
+
+make test
+To view a list of available targets with descriptions, run:
+
+
+make help
