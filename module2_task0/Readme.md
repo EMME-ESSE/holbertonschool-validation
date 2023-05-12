@@ -1,38 +1,16 @@
-Awesome API
-This is a simple API application that can be built, run, tested, and stopped with a Makefile.
+# Prerequisites:
+- Golang should be installed in the environment where the application will be built and run.
+- Basic understanding of Makefile and command-line interface.
 
-Prerequisites
-To run this application, you must have the following software installed on your system:
+## Project Lifecycle:
+- `build`: compile the source code of the application to a binary named `awesome-api` using the command `go build`.
+- `run`: run the application in the background by executing the binary `awesome-api` and write logs into a file named `awesome-api.log` using the command `./awesome-api >./awesome-api.log 2>&1 &`.
+- `stop`: stop the application using the command `kill XXXXX` where XXXXX is the Process ID of the application.
+- `clean`: stop the application and delete the binary `awesome-api` and the log file `awesome-api.log`.
+- `test`: test the application to ensure that it behaves as expected.
 
-go (v1.16 or higher)
-curl
-make
-Usage
-To build the application, run:
-
-
-make build
-To run the application, run:
-
-make run
-This will start the application and redirect its output to ./awesome-api.log. To stop the application, run:
-
-
-make stop
-To clean up the application and its log file, run:
-
-make clean
-To test the application, run:
-
-make test
-This will send requests to http://localhost:9999 and http://localhost:9999/health using curl.
-
-Makefile Commands
-Here is a list of available Makefile commands:
-
-build: Build the awesome-api binary.
-run: Run the awesome-api application.
-stop: Stop the awesome-api application.
-clean: Stop and clean the awesome-api application and log.
-test: Test the awesome-api application by sending requests to http://localhost:9999 and http://localhost:9999/health.
-help: Display what each command does.
+## Requirements:
+- A Makefile should be present and valid.
+- The binary `awesome-api` must NOT exist at the beginning, in the source code.
+- The goals `build`, `run`, `stop`, `clean`, and `test` should be implemented and mapped to the life-cycle stages of the same name.
+- The `help` goal must be implemented and print a list of all the goals with a sentence each
