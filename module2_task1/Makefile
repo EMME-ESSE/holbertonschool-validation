@@ -1,34 +1,22 @@
-# Configuración del binario
-BINARY_NAME=awesome-api
-BUILD_TIME=$(shell date -u '+%Y-%m-%d_%H:%M:%S')
-BUILD_VERSION=dev
-COMMIT=$(shell git rev-parse --short HEAD)
+lint: ## lint
+	golangci-lint run ./main.go
 
-# Comandos del Makefile
-.PHONY: build clean run test
+build: lint ## Build awesome-api
+	go build -o awesome-api
 
-build:
-	@echo "Compilando el binario $(BINARY_NAME)..."
-	go build -ldflags "-s -w -X main.buildTime=$(BUILD_TIME) -X main.buildVersion=$(BUILD_VERSION) -X main.gitCommit=$(COMMIT)" -o $(BINARY_NAME)
+run: ## Run awesome-api application
+	./awesome-api >./awesome-api.log 2>&1 &
 
-clean:
-	@echo "Limpiando el proyecto..."
-	rm -f $(BINARY_NAME)
+stop: ## Stop awesome-api application
+	kill $$(pgrep awesome-api) || true
 
-run:
-	@echo "Iniciando la aplicación..."
-	./$(BINARY_NAME)
+clean: stop ## Clean awesome-api application and log
+	rm -f awesome-api awesome-api.log
 
-test:
-	@echo "Ejecutando pruebas..."
-	go test ./...
+test: ## Test current connection
+	@curl http://localhost:9999
+	@curl http://localhost:9999/health
 
-# Configuración de ayuda
-help:
-	@echo "Uso: make [comando]"
-	@echo ""
-	@echo "Comandos:"
-	@echo "  build   Compilar el binario"
-	@echo "  clean   Limpiar el proyecto" # Comentario para el objetivo clean
-	@echo "  run     Iniciar la aplicación"
-	@echo "  test    Ejecutar pruebas"
+.SILENT:
+help: ## Display what each command does
+	cat Makefile | grep '##' | tr -d '##' | head -n -1
