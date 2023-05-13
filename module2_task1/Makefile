@@ -29,6 +29,6 @@ help:
 	@echo ""
 	@echo "Comandos:"
 	@echo "  build   Compilar el binario"
-	@echo "  clean   Limpiar el proyecto"
+	@echo "  clean   Limpiar el proyecto" # Comentario para el objetivo clean
 	@echo "  run     Iniciar la aplicación"
 	@echo "  test    Ejecutar pruebas"
