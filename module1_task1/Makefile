@@ -1,14 +1,12 @@
-PUBLIC = dist
-RM = rm -r
-
-.PHONY: clean
-clean: ; $(RM) ./${PUBLIC}/*
-
-.PHONY: build
 build:
-	@hugo -d $(PUBLIC)
+	@hugo
 
-.PHONY: post
-post:; 
+clean:
+	@rm -rf dist
+
+post:
 	@hugo new posts/$(POST_NAME).md
-	@sed -i '/title:/c\title: "$(POST_TITLE)"' content/posts/$(POST_NAME).md
+	@echo "---\
+	title: '$(POST_TITLE)'\
+	date: $(date +"%Y-%m-%dT%H:%M:%S%z")\
+	---" > content/posts/$(POST_NAME).md
