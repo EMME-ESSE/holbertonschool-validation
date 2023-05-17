@@ -22,7 +22,6 @@ jobs:
 
       - name: Validate Makefile
         run: |
-          cd .github/workflows
+          cd /.github/workflows/
           make help
-
 
