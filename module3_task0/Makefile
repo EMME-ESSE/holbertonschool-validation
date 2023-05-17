@@ -1,45 +1,41 @@
-build:  ## Generate the website from the markdown and configuration files in the directory dist/ and compile the source code of the application to a binary named awesome-api
-	$(MAKE) lint
-	$(GO) mod tidy
-	$(MAKE) check && $(HUGO) && $(GO) build -o $(TARGET)
-
-run: ## Run the application in background by executing the binary.
-	./$(TARGET) >./$(TARGET).log 2>&1 &
-
-post: ## Create a new blog post whose filename and title come from the environment variables POST_TITLE and POST_NAME
-	$(HUGO) new posts/$(POST_NAME).md
-	sed -i '2s/.*/title: "$(POST_TITLE)"/' content/posts/$(POST_NAME).md
-
-stop: ## Stop the application.
-	@pkill $(TARGET)
+build: ## Generate the website from the markdown and configuration files in the directory dist/ and compile the source code of the application to a binary named awesome-api
+	make check
+	hugo
 
 clean: ## Cleanup the content of the directory dist/, the binary awesome-api and the log file awesome-api.log
 	-rm -rf ./dist
 	-make stop
-	-rm ./awesome-api ./awesome-api.log ./coverage-units.out 
-	fi
-	@$(RM) $(TARGET) $(TARGET).log $(COVERAGE)-units.out $(COVERAGE)-integrations.out dist/ *~
+	-rm ./awesome-api ./awesome-api.log ./coverage-units.out
 
-test: ## Test the application.
-	$(MAKE) unit-tests
-	$(MAKE) integration-tests
-	$(MAKE) validate
+post: ## Create a new blog post whose filename and title come from the environment variables POST_TITLE and POST_NAME.
+	hugo new posts/${POST_NAME}.md
+	sed -i 's/^title:.*/title: ${POST_TITLE}/g' ./content/posts/${POST_NAME}.md
 
-unit-tests: ## Run unit tests
-	go test -v -short -coverprofile=$(COVERAGE)-units.out
+run: ## Run the application in background by executing the binary awesome-api, and write logs into a file named awesome-api.log
+	./awesome-api >./awesome-api.log 2>&1 &
 
-integration-tests: ## Run integration tests
-	go test -v -coverprofile=$(COVERAGE)-integrations.out
+stop: ## Stop the application with the command kill XXXXX where XXXXX is the Process ID of the application.
+	kill "$(shell pgrep awesome-api)"
 
-lint: ## Lint Go lang code
-	golangci-lint run
+test: ## Check expected behaviour of the app
+	make unit-tests
+	make integration-tests
 
-check: ## Lint markdown source, check dead links
-	markdownlint content/**/*.md
-	find content -name \*.md -print0 | xargs -0 -n1 markdown-link-check
+lint: ## Static linting on go files using golangci-lint
+	@golangci-lint run
 
-validate: ## Validate the file dist/index.html using the command line Holberton’s W3C Validator.
-	python3 /opt/W3C-Validator/w3c_validator.py ./dist/index.html || true
+unit-tests: ## execute (successfully) the Golang unit tests
+	@go test -v -short -coverprofile=coverage-units.out
 
-help: ## Show this help usage.
-	@sed -ne '/@sed/!s/## //p' $(MAKEFILE_LIST)
+integration-tests: ## execute the Golang integration tests
+	@go test -v -coverprofile=coverage-integrations.out
+
+check: ## Markdown linting on syntax and dead links
+	markdown-link-check ./content/posts/*
+	markdownlint ./content/posts/*
+
+validate: ## should validate the file ./dist/index.html by using the command line Holberton’s W3C Validator
+	- ./w3c_validator.py ./dist/index.html
+
+help: ## Shows this help message
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
