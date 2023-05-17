@@ -22,5 +22,5 @@ jobs:
 
       - name: Validate Makefile
         run: |
-          cd ../.github/workflows/module3_task0.yml
+          cd .github/workflows
           make help
